@@ -1,51 +1,30 @@
-#Library
+#Libraries
 library(plyr)
 
-#Importing data
-data <- read.csv("~/Desktop/Results-final/CSV/fixed.csv", header=T)
+#Importing Data
+	#Generic data import
+	#data <- read.csv("file.csv", header = T)
 
-chart <- ddply(data, "RefusingPatients", summarise, n = length(RefusingPatients))
+data <- read.csv("~/Documents/Data/surveys/lessismore/Data_All_150518/CSV/final_data.csv", 
+	header = T)
 
-refusing <- ddply(data, "RefusingPatients", summarise, n = length(RefusingPatients))
+#Subsetting columns we care about
+	#newdata <- X[,c(1, 14, 15)]
 
-pie(chart$n, labels = "", col = c('grey85', 'midnightblue'), border = FALSE)
+#Renaming if it's easier
+	#names(newdata) <- c("Name", "Name2"...)
 
+#Summaries for charts
+	ddply(data, 2, summarise, n = length(LessIsMore))
 
+#Establishing color spectrum
+	cols <- c("#0484d9", "#00235f", "#d2d2d2", "#ef3e1b")
 
-#Creating the 
-years <- ddply(data, "PracticeYears", summarise, n = length(PracticeYears))
-
-
-#Removing the extra year
-years <- years[-c(1, 5), ]
-
-
-#Fixing the problems of the data being out of order. 
-#Adding a record
-new <- c("Eleven (11) to Fifteen (15) years",  66)
-
-#Binding the new data 
-years = rbind(years,new)
-
-new <- c("Sixteen (16) years or more", 399)
-
-#Binding the new data 
-years = rbind(years,new)
-
-years$n <- as.numeric(years$n)
-
-
-#Plotting the barchart
-barplot(years$n, border = FALSE)
-
-
-
-pie(chart$n, labels = "", col = c('grey85', 'midnightblue'), border = FALSE)
-dev.copy(png, '~/Documents/Code/yesno.png')
-
-pie(altered$n, labels = "", col = c('grey85', 'midnightblue'), border = FALSE)
-
-dev.copy(png, '~/Documents/Code/altered.png')
-
-
-patientq <- ddply(data, "PatientQuestionOthers", summarise, n = length(PatientQuestionOthers))
+#Making the bar chart
+barplot(data, 
+	horiz = TRUE, 
+	border = FALSE, 
+	col = cols)
+abline(v=seq(0,400, 20), col = "white")
+#Saving the chart
+dev.copy(png, "~/Documents/Projects/charts/resist_extra.png", width = 800, height = 350)
